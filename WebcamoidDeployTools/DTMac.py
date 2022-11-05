@@ -211,6 +211,11 @@ def fixLibRpath(solver, mutex, mach, binDir, libDir):
                                         stdout=subprocess.PIPE)
             process.communicate()
 
+        if dep.endswith('.dylib'):
+            print(f"\nSigning dylib: {newDepPath}\n")
+            signPackage(newDepPath)
+
+
     mutex.acquire()
     print(log)
     mutex.release()
@@ -311,11 +316,6 @@ def writeBuildInfo(globs, buildInfoFile, sourcesDir):
         for packge in packages:
             print('    ' + packge)
             f.write(packge + '\n')
-
-            if packge.endswith('.dylib'):
-                dylib_path = os.path.join(dataDir, packge)
-                print(f"\nSigning dylib: {dylib_path}\n")
-                signPackage(dylib_path)
 
 def signPackage(package):
     process = subprocess.Popen(['codesign', # nosec
