@@ -157,6 +157,10 @@ def fixLibRpath(solver, mutex, mach, binDir, libDir):
                                     '-id', machId, mach],
                                     stdout=subprocess.PIPE)
         process.communicate()
+        if mach.endswith('.dylib'):
+            print(f"\nSigning dylib: {mach}\n")
+            signPackage(mach)
+        
 
     # Change rpath
 
@@ -168,12 +172,18 @@ def fixLibRpath(solver, mutex, mach, binDir, libDir):
                                         '-delete_rpath', rpath, mach],
                                         stdout=subprocess.PIPE)
             process.communicate()
+            if mach.endswith('.dylib'):
+                print(f"\nSigning dylib: {mach}\n")
+                signPackage(mach)
 
         for rpath in rpaths:
             process = subprocess.Popen(['install_name_tool', # nosec
                                         '-add_rpath', rpath, mach],
                                         stdout=subprocess.PIPE)
             process.communicate()
+            if mach.endswith('.dylib'):
+                print(f"\nSigning dylib: {mach}\n")
+                signPackage(mach)
 
     # Change library links
 
