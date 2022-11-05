@@ -312,6 +312,11 @@ def writeBuildInfo(globs, buildInfoFile, sourcesDir):
             print('    ' + packge)
             f.write(packge + '\n')
 
+            if packge.endswith('.dylib'):
+                dylib_path = os.path.join(dataDir, packge)
+                print(f"\nSigning dylib: {dylib_path}\n")
+                signPackage(dylib_path)
+
 def signPackage(package):
     process = subprocess.Popen(['codesign', # nosec
                                 '--force',
