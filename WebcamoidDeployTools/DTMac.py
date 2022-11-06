@@ -404,15 +404,13 @@ def postRun(globs, configs, dataDir):
     writeBuildInfo(globs, buildInfoFile, sourcesDir)
     print('\nSigning bundle\n')
     print(appBundle + '\n')
+    print(os.path.join(appBundle, 'Contents/MacOS/*') + '\n')
     # signPackage(appBundle)
 
     process = subprocess.Popen(['codesign', # nosec
+                                '--deep',
                                 '--force',
                                 '--sign',
-                                '--deep',
-                                '--verify',
-                                '--verbose',
-                                '--timestamp',
                                 '-',
                                 appBundle,
                                 os.path.join(appBundle, 'Contents/MacOS/*'),
