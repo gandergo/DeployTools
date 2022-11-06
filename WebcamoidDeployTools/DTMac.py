@@ -327,6 +327,7 @@ def signPackage(package):
     process = subprocess.Popen(['codesign', # nosec
                                 '--force',
                                 '--sign',
+                                '--deep',
                                 '-',
                                 package],
                                 stdout=subprocess.PIPE,
