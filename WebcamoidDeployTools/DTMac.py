@@ -328,6 +328,9 @@ def signPackage(package):
                                 '--force',
                                 '--sign',
                                 '--deep',
+                                '--verify',
+                                '--verbose',
+                                '--timestamp',
                                 '-',
                                 package],
                                 stdout=subprocess.PIPE,
@@ -400,4 +403,21 @@ def postRun(globs, configs, dataDir):
     print('\nWritting build system information\n')
     writeBuildInfo(globs, buildInfoFile, sourcesDir)
     print('\nSigning bundle\n')
-    signPackage(appBundle)
+    # signPackage(appBundle)
+
+    signPackage(os.path.join(appBundle, ))
+    process = subprocess.Popen(['codesign', # nosec
+                                '--force',
+                                '--sign',
+                                '--deep',
+                                '--verify',
+                                '--verbose',
+                                '--timestamp',
+                                '-',
+                                appBundle,
+                                os.path.join(appBundle, 'Contents/MacOS/*'),
+                                os.path.join(appBundle, 'Contents/Resources/*'),
+                                os.path.join(appBundle, 'Contents/Frameworks/*')],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+    process.communicate()
