@@ -325,12 +325,12 @@ def writeBuildInfo(globs, buildInfoFile, sourcesDir):
 
 def signPackage(package):
     process = subprocess.Popen(['codesign', # nosec
-                                '--force',
-                                '--sign',
                                 '--deep',
-                                '--verify',
+                                '--force',
                                 '--verbose',
-                                '--timestamp',
+                                '--sign',
+                                # '--verify',
+                                # '--timestamp',
                                 '-',
                                 package],
                                 stdout=subprocess.PIPE,
@@ -404,18 +404,26 @@ def postRun(globs, configs, dataDir):
     writeBuildInfo(globs, buildInfoFile, sourcesDir)
     print('\nSigning bundle\n')
     print(appBundle + '\n')
+    signPackage(appBundle)
     print(os.path.join(appBundle, 'Contents/MacOS/*') + '\n')
-    # signPackage(appBundle)
+    signPackage(os.path.join(appBundle, 'Contents/MacOS/*'))
+    print(os.path.join(appBundle, 'Contents/Resources/*') + '\n')
+    signPackage(os.path.join(appBundle, 'Contents/Resources/*'))
+    print(os.path.join(appBundle, 'Contents/Frameworks/*') + '\n')
+    signPackage(os.path.join(appBundle, 'Contents/Frameworks/*'))
+    print(os.path.join(appBundle, 'Contents/Plugins/*'))
+    signPackage(os.path.join(appBundle, 'Contents/Plugins/*'))
 
-    process = subprocess.Popen(['codesign', # nosec
-                                '--deep',
-                                '--force',
-                                '--sign',
-                                '-',
-                                appBundle,
-                                os.path.join(appBundle, 'Contents/MacOS/*'),
-                                os.path.join(appBundle, 'Contents/Resources/*'),
-                                os.path.join(appBundle, 'Contents/Frameworks/*')],
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
-    process.communicate()
+    # process = subprocess.Popen(['codesign', # nosec
+    #                             '--deep',
+    #                             '--force',
+    #                             '--sign',
+    #                             '-',
+    #                             appBundle,
+    #                             os.path.join(appBundle, 'Contents/MacOS/*'),
+    #                             os.path.join(appBundle, 'Contents/Resources/*'),
+    #                             os.path.join(appBundle, 'Contents/Frameworks/*')],
+    #                             os.path.join(appBundle, 'Contents/Plugins/*')],
+    #                             stdout=subprocess.PIPE,
+    #                             stderr=subprocess.PIPE)
+    # process.communicate()
