@@ -403,9 +403,9 @@ def postRun(globs, configs, dataDir):
     print('\nWritting build system information\n')
     writeBuildInfo(globs, buildInfoFile, sourcesDir)
     print('\nSigning bundle\n')
+    print(appBundle + '\n')
     # signPackage(appBundle)
 
-    signPackage(os.path.join(appBundle, ))
     process = subprocess.Popen(['codesign', # nosec
                                 '--force',
                                 '--sign',
