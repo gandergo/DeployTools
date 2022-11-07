@@ -325,7 +325,7 @@ def writeBuildInfo(globs, buildInfoFile, sourcesDir):
 
 def signPackage(package):
     process = subprocess.Popen(['codesign', # nosec
-                                '--deep',
+                                # '--deep',
                                 '--force',
                                 '--verbose',
                                 '--sign',
@@ -403,16 +403,16 @@ def postRun(globs, configs, dataDir):
     print('\nWritting build system information\n')
     writeBuildInfo(globs, buildInfoFile, sourcesDir)
     print('\nSigning bundle\n')
-    print(appBundle + '\n')
+    # print(appBundle + '\n')
     signPackage(appBundle)
-    print(os.path.join(appBundle, 'Contents/MacOS/*') + '\n')
-    signPackage(os.path.join(appBundle, 'Contents/MacOS/*'))
-    print(os.path.join(appBundle, 'Contents/Resources/*') + '\n')
-    signPackage(os.path.join(appBundle, 'Contents/Resources/*'))
-    print(os.path.join(appBundle, 'Contents/Frameworks/*') + '\n')
-    signPackage(os.path.join(appBundle, 'Contents/Frameworks/*'))
-    print(os.path.join(appBundle, 'Contents/Plugins/*'))
-    signPackage(os.path.join(appBundle, 'Contents/Plugins/*'))
+    # print(os.path.join(appBundle, 'Contents/MacOS/*') + '\n')
+    # signPackage(os.path.join(appBundle, 'Contents/MacOS/*'))
+    # print(os.path.join(appBundle, 'Contents/Resources/*') + '\n')
+    # signPackage(os.path.join(appBundle, 'Contents/Resources/*'))
+    # print(os.path.join(appBundle, 'Contents/Frameworks/*') + '\n')
+    # signPackage(os.path.join(appBundle, 'Contents/Frameworks/*'))
+    # print(os.path.join(appBundle, 'Contents/Plugins/*'))
+    # signPackage(os.path.join(appBundle, 'Contents/Plugins/*'))
 
     # process = subprocess.Popen(['codesign', # nosec
     #                             '--deep',
