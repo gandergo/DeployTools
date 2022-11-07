@@ -361,17 +361,22 @@ def import_key():
 
 
 def signPackage(package):
-    process = subprocess.Popen(['codesign', # nosec
-                                # '--deep',
-                                '--force',
-                                '--verbose',
-                                '--sign',
-                                # '--verify',
-                                # '--timestamp',
-                                'gandergo',
-                                package],
+    # process = subprocess.Popen(['codesign', # nosec
+    #                             # '--deep',
+    #                             '--force',
+    #                             '--verbose',
+    #                             '--sign',
+    #                             # '--verify',
+    #                             # '--timestamp',
+    #                             'gandergo',
+    #                             package],
+    #                             stdout=subprocess.PIPE,
+    #                             stderr=subprocess.PIPE)
+    process = subprocess.Popen(['bash',
+                                '-c'
+                                f"codesign --force --verbose --keychain {os.environ['KEYCHAIN_PATH']} --sign {os.environ['KEY_NAME']} {package} {os.path.join(package, 'Contents/Frameworks/**/*.dylib')} {os.path.join(package, 'Contents/Plugins/**/*.dylib')} {os.path.join(package, 'Contents/Resources/**/*.dylib')}],
                                 stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
+#                               stderr=subprocess.PIPE)
     process.communicate()
 
 def preRun(globs, configs, dataDir):
