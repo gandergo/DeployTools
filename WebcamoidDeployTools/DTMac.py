@@ -326,14 +326,35 @@ def writeBuildInfo(globs, buildInfoFile, sourcesDir):
 def import_key():
     process = subprocess.Popen(['bash',
                                 '-c',
-                                f"echo -n \"{os.environ['SIGN_KEY']}\" | base64 --decode --output sign_key.p12"],
+                                f"echo -n \"{os.environ['SIGN_KEY']}\" | base64 --decode > sign_key.p12"],
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
     process.communicate()
 
     process = subprocess.Popen(['bash',
                                 '-c',
-                                f"security import sign_key.p12 -P {os.environ['KEY_PASS']} -A -t cert -f pkcs12"],
+                                f"security create-keychain -p \"{os.environ['KEYCHAIN_PASSWORD']}\" {os.environ['KEYCHAIN_PATH']}"],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+    process.communicate()
+
+    process = subprocess.Popen(['bash',
+                                '-c',
+                                f"security unlock-keychain -p \"{os.environ['KEYCHAIN_PASSWORD']}\" {os.environ['KEYCHAIN_PATH']}"],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+    process.communicate()
+
+    process = subprocess.Popen(['bash',
+                                '-c',
+                                f"security import sign_key.p12 -P {os.environ['KEY_PASS']} -A -t cert -f pkcs12 -k {os.environ['KEYCHAIN_PATH']}"],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+    process.communicate()
+
+    process = subprocess.Popen(['bash',
+                                '-c',
+                                f"security list-keychain -d user -s {os.environ['KEYCHAIN_PATH']}"],
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
     process.communicate()
@@ -347,7 +368,7 @@ def signPackage(package):
                                 '--sign',
                                 # '--verify',
                                 # '--timestamp',
-                                '-',
+                                'gandergo',
                                 package],
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
