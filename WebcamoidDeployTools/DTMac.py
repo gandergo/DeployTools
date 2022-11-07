@@ -324,28 +324,16 @@ def writeBuildInfo(globs, buildInfoFile, sourcesDir):
             f.write(packge + '\n')
 
 def import_key():
-    process = subprocess.Popen(['echo',
-                                '-n',
-                                '"$SIGN_KEY"',
-                                "|",
-                                "base64",
-                                "--decode",
-                                "--output",
-                                "sign_key.p12"]),
+    process = subprocess.Popen(['bash',
+                                '-c',
+                                f"echo -n \"{os.environ['SIGN_KEY']}\" | base64 --decode --output sign_key.p12"],
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
     process.communicate()
 
-    process = subprocess.Popen(['security',
-                                'import',
-                                "sign_key.p12",
-                                '-P',
-                                '"$KEY_PASS"',
-                                '-A',
-                                '-t',
-                                'cert',
-                                '-f',
-                                'pkcs12'],
+    process = subprocess.Popen(['bash',
+                                '-c',
+                                f"security import sign_key.p12 -P {os.environ['KEY_PASS']} -A -t cert -f pkcs12"],
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
     process.communicate()
