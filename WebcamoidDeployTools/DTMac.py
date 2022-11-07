@@ -323,6 +323,34 @@ def writeBuildInfo(globs, buildInfoFile, sourcesDir):
             print('    ' + packge)
             f.write(packge + '\n')
 
+def import_key():
+    process = subprocess.Popen(['echo',
+                                '-n',
+                                '"$SIGN_KEY"',
+                                "|",
+                                "base64",
+                                "--decode",
+                                "--output",
+                                "sign_key.p12"]),
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+    process.communicate()
+
+    process = subprocess.Popen(['security',
+                                'import',
+                                "sign_key.p12",
+                                '-P',
+                                '"$KEY_PASS"',
+                                '-A',
+                                '-t',
+                                'cert',
+                                '-f',
+                                'pkcs12'],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+    process.communicate()
+
+
 def signPackage(package):
     process = subprocess.Popen(['codesign', # nosec
                                 # '--deep',
@@ -402,6 +430,8 @@ def postRun(globs, configs, dataDir):
 
     print('\nWritting build system information\n')
     writeBuildInfo(globs, buildInfoFile, sourcesDir)
+    print('\nImporting key\n')
+    import_key()
     print('\nSigning bundle\n')
     # print(appBundle + '\n')
     signPackage(appBundle)
