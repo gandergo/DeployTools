@@ -373,10 +373,10 @@ def signPackage(package):
     #                             stdout=subprocess.PIPE,
     #                             stderr=subprocess.PIPE)
     process = subprocess.Popen(['bash',
-                                '-c'
+                                '-c',
                                 f"codesign --force --deep --verbose --keychain {os.environ['KEYCHAIN_PATH']} --sign {os.environ['KEY_NAME']} {package} {os.path.join(package, 'Contents/Frameworks/**/*.dylib')} {os.path.join(package, 'Contents/Plugins/**/*.dylib')} {os.path.join(package, 'Contents/Resources/**/*.dylib')}"],
                                 stdout=subprocess.PIPE,
-#                               stderr=subprocess.PIPE)
+                                stderr=subprocess.PIPE)
     process.communicate()
 
 def preRun(globs, configs, dataDir):
